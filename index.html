@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10132b">
+<title>Emon Fun World</title>
+<style>
+:root{--bg:#0c1024;--panel:#171d3b;--line:#303a68;--text:#f7f8ff;--muted:#b7c0e3;--purple:#7c5cff;--green:#00d4a6;--yellow:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#22245a 0,#0c1024 48%);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif}
+header{padding:25px 15px 20px;text-align:center;background:linear-gradient(135deg,#5b3be8,#1a9dbe);border-radius:0 0 26px 26px}
+.logo{font-size:clamp(28px,7vw,42px);font-weight:900}.logo span{color:#ffe27a}.tag{margin:7px 0 0;color:#fff}
+.wrap{max-width:1000px;margin:auto;padding:15px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}.stat,.panel,.tile{background:rgba(23,29,59,.97);border:1px solid var(--line);border-radius:17px;padding:14px}.stat strong{display:block;font-size:22px;color:var(--yellow)}.stat small,.tile small{color:var(--muted)}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:15px 0}.nav button,.btn{border:0;border-radius:12px;padding:12px 9px;font-weight:800;background:#30395f;color:white;cursor:pointer}.nav button.active,.btn.primary{background:linear-gradient(135deg,var(--purple),#3e9de9)}h2{margin:0 0 8px;font-size:22px}p{color:var(--muted);line-height:1.55}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:11px}.tile{cursor:pointer;text-align:left;color:var(--text);min-height:125px}.tile .emoji{font-size:30px}.tile strong{display:block;margin:8px 0 3px}.hidden{display:none!important}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.question{font-size:21px;font-weight:800;margin:18px 0}.answers{display:grid;gap:9px}.answer{padding:13px;border:1px solid #3a4679;border-radius:12px;background:#20294c;color:white;text-align:left;font-size:16px;cursor:pointer}.answer.correct{border-color:var(--green);background:#075745}.answer.wrong{border-color:#ff6b8a;background:#5c2439}.feedback{min-height:27px;font-weight:700;margin:12px 0}.progress{height:8px;background:#30395f;border-radius:99px;overflow:hidden;margin:12px 0}.progress div{height:100%;background:linear-gradient(90deg,var(--green),var(--purple));width:0}input,select{width:100%;padding:12px;border:1px solid #3a4679;border-radius:12px;background:#0f1530;color:white;font-size:16px;margin:6px 0 12px}.notice{border:1px solid #7462d9;background:#24254e;padding:12px;border-radius:12px;color:#e4e7ff;margin:12px 0}.gameboard{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:330px;margin:15px auto}.cell{aspect-ratio:1;border-radius:14px;border:1px solid #465184;background:#20294c;color:white;font-size:36px;font-weight:900;cursor:pointer}.memory{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.memcard{aspect-ratio:1;background:#30395f;border:0;border-radius:12px;color:white;font-size:28px;cursor:pointer}.memcard.open{background:#5a42bc}.memcard.done{background:#075745}.overlay{position:fixed;inset:0;z-index:1000;background:rgba(5,7,22,.97);display:flex;align-items:center;justify-content:center;padding:18px}.gate{width:min(500px,100%);text-align:center;padding:24px;background:linear-gradient(160deg,#24285a,#151a36);border:1px solid #6556c9;border-radius:24px;box-shadow:0 20px 80px #0008}.gate .big{font-size:54px}.gate h1{margin:8px 0;font-size:27px}.gate p{font-size:15px}.gate button{width:100%;margin-top:10px}.gate-note{font-size:12px!important;color:#aeb8e7}.gate-status{min-height:24px;color:#ffe27a;font-weight:700}.gate audio{width:100%;margin-top:10px}footer{text-align:center;color:#8e9ac6;padding:25px 10px;font-size:12px}
+@media(max-width:480px){.nav{grid-template-columns:repeat(2,1fr)}.stat{padding:10px}.stat strong{font-size:19px}.wrap{padding:12px}}
+</style></head>
+<body>
+<div id="welcomeGate" class="overlay">
+ <div class="gate">
+  <div class="big">🎧🎮</div>
+  <h1>স্বাগতম Emon Fun World-এ!</h1>
+  <p>ওয়েবসাইট ব্যবহার করার আগে স্বাগতম ভয়েসটি পুরো শুনতে হবে। নিচের বাটনে চাপ দিয়ে ভয়েস চালু করো। ভয়েস শেষ না হওয়া পর্যন্ত গেমগুলো লক থাকবে।</p>
+  <audio id="welcomeAudio" preload="auto">
+   <source src="./welcome-voice.mp3" type="audio/mpeg">
+   তোমার ব্রাউজার অডিও চালাতে পারছে না।
+  </audio>
+  <div id="gateStatus" class="gate-status">▶️ “ভয়েস শুনুন” চাপ দাও</div>
+  <button id="listenBtn" class="btn primary">🔊 ভয়েস শুনুন</button>
+  <button id="continueBtn" class="btn" disabled>🔒 ভয়েস শেষ হলে খুলবে</button>
+  <p class="gate-note">নোট: ব্রাউজারের নিয়মে নিজে থেকে শব্দ চালু নাও হতে পারে, তাই প্রথমে বাটনে চাপ দিতে হবে।</p>
+ </div>
+</div>
+<header><div class="logo">🎮 Emon <span>Fun World</span></div><p class="tag">হাজারো মজার চ্যালেঞ্জের দুনিয়া! খেলো, শেখো, স্কোর বাড়াও ✨</p></header>
+<div class="wrap">
+<div class="stats"><div class="stat"><strong id="points">0</strong><small>⭐ মোট পয়েন্ট</small></div><div class="stat"><strong id="played">0</strong><small>🎯 খেলা হয়েছে</small></div><div class="stat"><strong id="best">0</strong><small>🏆 সেরা স্কোর</small></div></div>
+<div class="notice">📴 এই সংস্করণটি অফলাইনে চলে। কোনো লগইন বা ইন্টারনেট দরকার নেই। স্কোর এই ডিভাইসের ব্রাউজারে সেভ হবে।</div>
+<div class="nav"><button class="active" data-tab="home">🏠 হোম</button><button data-tab="quiz">🧠 কুইজ</button><button data-tab="riddles">🤔 ধাঁধা</button><button data-tab="games">🕹️ গেম</button></div>
+<section id="home"><div class="panel"><h2>স্বাগতম, খেলোয়াড়! 👋</h2><p>পছন্দের বিভাগ বেছে নাও। প্রতিটি সঠিক উত্তরে পয়েন্ট পাবে। যত বেশি খেলবে, তত বেশি নিজের রেকর্ড গড়বে!</p></div>
+<h2 style="margin:18px 0 10px">তোমার মজার জোন</h2><div class="grid">
+<button class="tile" onclick="showTab('quiz')"><span class="emoji">🧠</span><strong>কুইজ চ্যালেঞ্জ</strong><small>অনেক প্রশ্ন ও নতুন রাউন্ড</small></button>
+<button class="tile" onclick="showTab('riddles')"><span class="emoji">🤔</span><strong>ধাঁধার আসর</strong><small>মাথা খাটিয়ে উত্তর দাও</small></button>
+<button class="tile" onclick="showTab('games')"><span class="emoji">🎮</span><strong>মিনি গেম</strong><small>মেমোরি, টিক-ট্যাক-টো</small></button>
+<button class="tile" onclick="startNumberGame()"><span class="emoji">🔢</span><strong>নাম্বার গেসিং</strong><small>সংখ্যাটা খুঁজে বের করো</small></button></div>
+<div class="panel" style="margin-top:14px"><h2>💡 খেলার কথা</h2><p>বন্ধুরা একই ফোনে পালা করে কুইজ খেলতে পারবে। এই সংস্করণটি অফলাইন, তাই লাইভ অনলাইন মাল্টিপ্লেয়ার নেই।</p></div></section>
+<section id="quiz" class="hidden"><div class="panel"><div class="row"><div><h2>🧠 কুইজ চ্যালেঞ্জ</h2><p>সঠিক উত্তর বেছে নাও।</p></div><div><select id="category" aria-label="কুইজ বিভাগ"><option value="all">সব বিভাগ</option><option value="সাধারণ জ্ঞান">সাধারণ জ্ঞান</option><option value="বিজ্ঞান">বিজ্ঞান</option><option value="গণিত">গণিত</option><option value="খেলাধুলা">খেলাধুলা</option><option value="বাংলা">বাংলা</option></select></div></div><div class="progress"><div id="qProgress"></div></div><div id="quizArea"><button class="btn primary" onclick="startQuiz()">▶️ কুইজ শুরু করো</button></div></div></section>
+<section id="riddles" class="hidden"><div class="panel"><h2>🤔 ধাঁধার আসর</h2><p>ধাঁধা পড়ে উত্তর অনুমান করো।</p><div id="riddleArea"><button class="btn primary" onclick="nextRiddle()">নতুন ধাঁধা 🎲</button></div></div></section>
+<section id="games" class="hidden"><h2>🕹️ মিনি গেম জোন</h2><div class="grid">
+<button class="tile" onclick="startTic()"><span class="emoji">❎</span><strong>টিক-ট্যাক-টো</strong><small>একই ফোনে দুইজন</small></button>
+<button class="tile" onclick="startMemory()"><span class="emoji">🧩</span><strong>মেমোরি ম্যাচ</strong><small>একই ছবি মিলাও</small></button>
+<button class="tile" onclick="startNumberGame()"><span class="emoji">🔢</span><strong>নাম্বার গেসিং</strong><small>১–১০০ এর সংখ্যা</small></button>
+<button class="tile" onclick="startReaction()"><span class="emoji">⚡</span><strong>রিঅ্যাকশন টেস্ট</strong><small>সবুজ হলে দ্রুত চাপো</small></button></div><div id="gameArea" class="panel hidden" style="margin-top:14px"></div></section>
+</div><footer>© Emon Fun World · Made for fun 💜<br>অফলাইন সংস্করণ · স্বাগতম ভয়েস শুনে তারপর ব্যবহার করো</footer>
+<script>
+const $=id=>document.getElementById(id);
+const audio=$('welcomeAudio'), gate=$('welcomeGate');
+let unlocked=false;
+$('listenBtn').addEventListener('click',async()=>{try{audio.currentTime=0;await audio.play();$('gateStatus').textContent='🔊 ভয়েস চলছে—শেষ পর্যন্ত শুনো';$('listenBtn').textContent='🔊 ভয়েস আবার শুনুন';}catch(e){$('gateStatus').textContent='অডিও চালু হয়নি। প্লেয়ারের ▶️ বাটনে চাপ দাও।';}});
+audio.addEventListener('ended',()=>{$('gateStatus').textContent='✅ ভয়েস শেষ হয়েছে! এখন ওয়েবসাইট খুলতে পারো।';$('continueBtn').disabled=false;$('continueBtn').textContent='✅ ওয়েবসাইট ব্যবহার শুরু করো';});
+$('continueBtn').addEventListener('click',()=>{if(audio.ended){unlocked=true;gate.classList.add('hidden');}});
+audio.addEventListener('play',()=>{$('continueBtn').disabled=true;$('continueBtn').textContent='🔒 ভয়েস শেষ হলে খুলবে';});
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+function showTab(tab){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));$(tab).classList.remove('hidden');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+let score=Number(localStorage.getItem('efw_points')||0),played=Number(localStorage.getItem('efw_played')||0),best=Number(localStorage.getItem('efw_best')||0);
+function updateStats(){ $('points').textContent=score;$('played').textContent=played;$('best').textContent=best;localStorage.setItem('efw_points',score);localStorage.setItem('efw_played',played);localStorage.setItem('efw_best',best)}
+function award(n=10){score+=n;played++;best=Math.max(best,n);updateStats()}
+const raw=[
+["সাধারণ জ্ঞান","বাংলাদেশের রাজধানী কোনটি?","ঢাকা",["চট্টগ্রাম","খুলনা","রাজশাহী"]],
+["সাধারণ জ্ঞান","বাংলাদেশের জাতীয় ফুল কোনটি?","শাপলা",["গোলাপ","জবা","সূর্যমুখী"]],
+["সাধারণ জ্ঞান","বাংলাদেশের জাতীয় ফল কোনটি?","কাঁঠাল",["আম","লিচু","কলা"]],
+["সাধারণ জ্ঞান","বাংলাদেশের জাতীয় মাছ কোনটি?","ইলিশ",["রুই","কাতলা","পাঙ্গাস"]],
+["সাধারণ জ্ঞান","বাংলাদেশের জাতীয় পাখি কোনটি?","দোয়েল",["কাক","ময়না","টিয়া"]],
+["সাধারণ জ্ঞান","বাংলাদেশের মুদ্রার নাম কী?","টাকা",["রুপি","রিয়াল","দিনার"]],
+["সাধারণ জ্ঞান","বাংলাদেশের স্বাধীনতা দিবস কবে?","২৬ মার্চ",["১৬ ডিসেম্বর","২১ ফেব্রুয়ারি","১৪ এপ্রিল"]],
+["সাধারণ জ্ঞান","বাংলাদেশের বিজয় দিবস কবে?","১৬ ডিসেম্বর",["২৬ মার্চ","২১ ফেব্রুয়ারি","১ মে"]],
+["সাধারণ জ্ঞান","বিশ্বের সবচেয়ে বড় মহাসাগর কোনটি?","প্রশান্ত মহাসাগর",["আটলান্টিক","ভারত মহাসাগর","আর্কটিক"]],
+["সাধারণ জ্ঞান","পৃথিবীর প্রাকৃতিক উপগ্রহ কোনটি?","চাঁদ",["সূর্য","মঙ্গল","শুক্র"]],
+["বিজ্ঞান","পানি সাধারণ চাপে কত °C তাপমাত্রায় বরফ হয়?","০° সেলসিয়াস",["১০° সেলসিয়াস","৫০° সেলসিয়াস","১০০° সেলসিয়াস"]],
+["বিজ্ঞান","গাছ খাদ্য তৈরিতে কোন গ্যাস ব্যবহার করে?","কার্বন ডাই-অক্সাইড",["অক্সিজেন","হিলিয়াম","হাইড্রোজেন"]],
+["বিজ্ঞান","সূর্য কী?","নক্ষত্র",["গ্রহ","উপগ্রহ","ধূমকেতু"]],
+["বিজ্ঞান","পানির রাসায়নিক সংকেত কী?","H₂O",["CO₂","O₂","NaCl"]],
+["বিজ্ঞান","মানবদেহে রক্ত পাম্প করে কোন অঙ্গ?","হৃদপিণ্ড",["ফুসফুস","যকৃত","কিডনি"]],
+["খেলাধুলা","ফুটবল দলে মাঠে একসঙ্গে কতজন খেলোয়াড় থাকে?","১১ জন",["৯ জন","১০ জন","১২ জন"]],
+["খেলাধুলা","ক্রিকেটে এক ওভারে সাধারণত কয়টি বৈধ বল থাকে?","৬টি",["৪টি","৫টি","৮টি"]],
+["খেলাধুলা","অলিম্পিক গেমস সাধারণত কত বছর পরপর হয়?","৪ বছর",["২ বছর","৩ বছর","৫ বছর"]],
+["বাংলা","বাংলা ভাষার আন্তর্জাতিক মাতৃভাষা দিবস কবে?","২১ ফেব্রুয়ারি",["২৬ মার্চ","১৬ ডিসেম্বর","১ জানুয়ারি"]],
+["বাংলা","'দিন' শব্দের বিপরীত শব্দ কী?","রাত",["সকাল","দুপুর","আলো"]],
+["বাংলা","'আকাশ' শব্দের সমার্থক শব্দ কোনটি?","গগন",["পাতাল","সাগর","পাহাড়"]]
+];
+let questions=raw.map(x=>({cat:x[0],q:x[1],a:x[2],opts:shuffle([x[2],...x[3]])}));
+for(let i=1;i<=120;i++){
+ let cat=['গণিত','গণিত','সাধারণ জ্ঞান','বিজ্ঞান','বাংলা','খেলাধুলা'][i%6],q,a,opts;
+ if(cat==='গণিত'){let x=(i*7)%40+10,y=(i*11)%25+3,op=i%3;if(op===0){q=`${x} + ${y} = কত?`;a=String(x+y)}else if(op===1){q=`${Math.max(x,y)} − ${Math.min(x,y)} = কত?`;a=String(Math.abs(x-y))}else{let m=i%9+2,n=i%7+3;q=`${m} × ${n} = কত?`;a=String(m*n)}let v=Number(a);opts=shuffle([...new Set([a,String(v+2),String(Math.max(0,v-3)),String(v+5)])]);}
+ else if(cat==='সাধারণ জ্ঞান'){let sets=[['এক সপ্তাহে কয় দিন?','৭ দিন',['৫ দিন','৬ দিন','৮ দিন']],['এক বছরে সাধারণত কয় মাস?','১২ মাস',['১০ মাস','১১ মাস','১৩ মাস']],['জাপানের রাজধানী কোনটি?','টোকিও',['কিয়োটো','ওসাকা','সিউল']],['ভারতের রাজধানী কোনটি?','নয়াদিল্লি',['মুম্বাই','কলকাতা','চেন্নাই']],['সৌরজগতের বৃহত্তম গ্রহ কোনটি?','বৃহস্পতি',['পৃথিবী','মঙ্গল','শনি']],['বিশ্বের বৃহত্তম মহাদেশ কোনটি?','এশিয়া',['আফ্রিকা','ইউরোপ','অস্ট্রেলিয়া']]];let z=sets[i%sets.length];q=z[0];a=z[1];opts=shuffle([a,...z[2]])}
+ else if(cat==='বিজ্ঞান'){let sets=[['মানুষ শ্বাস নেওয়ার সময় কোন গ্যাস ব্যবহার করে?','অক্সিজেন',['নাইট্রোজেন','কার্বন ডাই-অক্সাইড','মিথেন']],['পৃথিবীর সবচেয়ে কাছের নক্ষত্র কোনটি?','সূর্য',['সিরিয়াস','ধ্রুবতারা','প্রক্সিমা সেন্টোরি']],['উদ্ভিদের সবুজ রঞ্জকের নাম কী?','ক্লোরোফিল',['হিমোগ্লোবিন','মেলানিন','কেরাটিন']],['চুম্বকের দুই মেরুর নাম কী?','উত্তর ও দক্ষিণ',['পূর্ব ও পশ্চিম','ডান ও বাম','উপর ও নিচ']]];let z=sets[i%sets.length];q=z[0];a=z[1];opts=shuffle([a,...z[2]])}
+ else if(cat==='বাংলা'){let sets=[["'সৎ' শব্দের বিপরীত শব্দ কী?",'অসৎ',['সত্য','ভালো','ন্যায়']],["'পাখি' শব্দের বহুবচন কোনটি?",'পাখিরা',['পাখিটি','পাখিটা','পাখিখানা']],["'দ্রুত' শব্দের বিপরীত কোনটি?",'ধীর',['তাড়াতাড়ি','চটপট','শীঘ্র']]];let z=sets[i%sets.length];q=z[0];a=z[1];opts=shuffle([a,...z[2]])}
+ else {let sets=[['ক্রিকেটে ব্যাট দিয়ে কী করা হয়?','বল মারা',['গোল করা','শাটল মারা','পাক ঠেলা']],['দাবায় রাজাকে কী বলা হয়?','কিং',['কুইন','রুক','বিশপ']],['ব্যাডমিন্টনে কী দিয়ে খেলা হয়?','শাটলকক',['টেনিস বল','হকি পাক','বেসবল']]];let z=sets[i%sets.length];q=z[0];a=z[1];opts=shuffle([a,...z[2]])}
+ questions.push({cat,q,a,opts});
+}
+let quizList=[],qi=0,qscore=0,answered=false;
+function startQuiz(){let cat=$('category').value;quizList=shuffle(questions.filter(q=>cat==='all'||q.cat===cat)).slice(0,10);qi=0;qscore=0;renderQuestion()}
+function renderQuestion(){answered=false;if(qi>=quizList.length){$('quizArea').innerHTML=`<div class="big">🏆</div><h2>কুইজ শেষ!</h2><p>তোমার স্কোর: ${qscore}/${quizList.length*10}</p><button class="btn primary" onclick="startQuiz()">আবার খেলো</button>`;$('qProgress').style.width='100%';award(qscore);return}let q=quizList[qi];$('qProgress').style.width=(qi/quizList.length*100)+'%';$('quizArea').innerHTML=`<small>প্রশ্ন ${qi+1}/${quizList.length} · ${q.cat}</small><div class="question">${q.q}</div><div class="answers">${q.opts.map(o=>`<button class="answer" onclick="answerQuiz(this,${JSON.stringify(o).replace(/"/g,'&quot;')})">${o}</button>`).join('')}</div><div id="feedback" class="feedback"></div><button id="nextQ" class="btn primary hidden" onclick="qi++;renderQuestion()">পরের প্রশ্ন ➜</button>`}
+function answerQuiz(btn,opt){if(answered)return;answered=true;let q=quizList[qi];document.querySelectorAll('#quizArea .answer').forEach(b=>{b.disabled=true;if(b.textContent===q.a)b.classList.add('correct')});if(opt===q.a){qscore+=10;$('feedback').textContent='✅ সঠিক! +১০ পয়েন্ট';}else{$('feedback').textContent='🙂 সঠিক উত্তর: '+q.a;btn.classList.add('wrong')}$('nextQ').classList.remove('hidden')}
+const riddles=[['যত বেশি শুকায়, তত বেশি ভিজে। কী?','তোয়ালে'],['দাঁত আছে, কিন্তু কামড়াতে পারে না। কী?','চিরুনি'],['হাত আছে, কিন্তু তালি দিতে পারে না। কী?','ঘড়ি'],['মাথা আছে, লেজ আছে, কিন্তু শরীর নেই। কী?','কয়েন'],['যত কাটবে, তত বড় হবে। কী?','গর্ত'],['নিজে চলে না, তবু পথ দেখায়। কী?','মানচিত্র'],['পা নেই, তবু চলে। কী?','নদী'],['ঘর আছে, দরজা নেই; ভেতরে সাদা। কী?','ডিম'],['দিনে লুকায়, রাতে জ্বলে। কী?','তারা'],['এক চোখ আছে, তবু দেখতে পায় না। কী?','সুঁই'],['যার গলা আছে, মাথা নেই। কী?','বোতল'],['কোন জিনিস ভাঙলে শব্দ হয় না?','প্রতিশ্রুতি'],['যত নেবে, তত পেছনে ফেলে যাবে। কী?','পদক্ষেপ'],['পানি খেলে মরে, খাবার খেলে বাঁচে। কী?','আগুন'],['কোন মাসে ২৮ দিন থাকে?','সব মাসেই'],['কোন জিনিস তোমার, কিন্তু অন্যরা বেশি ব্যবহার করে?','তোমার নাম'],['চাবি আছে, তালা খোলে না। কী?','কীবোর্ড'],['দুই ভাই পাশাপাশি থাকে, একে অন্যকে দেখে না। কী?','চোখ'],['লাল-সবুজ পতাকা কোন দেশের?','বাংলাদেশ'],['সাদা মাঠে কালো বীজ, পড়লে জ্ঞান বাড়ে। কী?','বইয়ের লেখা']];
+let ri=-1;
+function nextRiddle(){ri=(ri+1)%riddles.length;let r=riddles[ri];$('riddleArea').innerHTML=`<small>ধাঁধা ${ri+1}/${riddles.length}</small><div class="question">${r[0]}</div><div id="rAns" class="feedback"></div><button class="btn yellow" onclick="showRiddleAnswer()">উত্তর দেখো 👀</button> <button class="btn primary" onclick="nextRiddle()">পরের ধাঁধা ➜</button>`}
+function showRiddleAnswer(){$('rAns').textContent='উত্তর: '+riddles[ri][1];award(2)}
+let gameArea=$('gameArea');
+function openGame(title){gameArea.classList.remove('hidden');gameArea.innerHTML=`<h2>${title}</h2><div id="gameContent"></div><button class="btn" onclick="gameArea.classList.add('hidden')">বন্ধ করো</button>`;gameArea.scrollIntoView({behavior:'smooth',block:'start'});return $('gameContent')}
+function startNumberGame(){showTab('games');let c=openGame('🔢 নাম্বার গেসিং');let secret=Math.floor(Math.random()*100)+1,tries=0;c.innerHTML=`<p>১ থেকে ১০০-এর মধ্যে সংখ্যাটি খুঁজে বের করো।</p><input id="guess" type="number" min="1" max="100" placeholder="তোমার অনুমান লিখো"><button class="btn primary" onclick="guessNumber()">অনুমান করো</button><p id="guessMsg"></p>`;window.guessNumber=()=>{let v=Number($('guess').value);if(v<1||v>100){$('guessMsg').textContent='১ থেকে ১০০-এর মধ্যে দাও।';return}tries++;if(v===secret){$('guessMsg').textContent=`🎉 ঠিক ধরেছ! চেষ্টা লেগেছে ${tries} বার। +২০ পয়েন্ট`;award(20);secret=Math.floor(Math.random()*100)+1;tries=0}else $('guessMsg').textContent=v<secret?'আরও বড় সংখ্যা চেষ্টা করো ⬆️':'আরও ছোট সংখ্যা চেষ্টা করো ⬇️'}}
+let board=Array(9).fill(''),turn='X',ticDone=false;
+function startTic(){showTab('games');let c=openGame('❎ টিক-ট্যাক-টো');board=Array(9).fill('');turn='X';ticDone=false;c.innerHTML=`<p>একই ফোনে দুইজন পালা করে খেলো। X আগে শুরু করবে।</p><div class="gameboard">${board.map((v,i)=>`<button class="cell" onclick="ticMove(${i})" id="cell${i}"></button>`).join('')}</div><p id="ticMsg">X-এর পালা</p><button class="btn primary" onclick="startTic()">আবার শুরু</button>`}
+function ticMove(i){if(board[i]||ticDone)return;board[i]=turn;$('cell'+i).textContent=turn;let wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];if(wins.some(w=>w.every(k=>board[k]===turn))){$('ticMsg').textContent='🎉 '+turn+' জিতেছে!';ticDone=true;award(15)}else if(board.every(Boolean)){ $('ticMsg').textContent='ড্র! আবার খেলো।';ticDone=true}else{turn=turn==='X'?'O':'X';$('ticMsg').textContent=turn+'-এর পালা'}}
+function startMemory(){showTab('games');let c=openGame('🧩 মেমোরি ম্যাচ'),icons=shuffle(['🐱','🐶','🍎','🚀','🌟','⚽','🍉','🎲', '🐱','🐶','🍎','🚀','🌟','⚽','🍉','🎲']);let first=null,lock=false,matches=0,moves=0;c.innerHTML=`<p>একই ছবি জোড়া মিলাও।</p><p id="memInfo">চাল: ০ · জোড়া: ০/৮</p><div class="memory">${icons.map((v,i)=>`<button class="memcard" id="mem${i}" onclick="flipMem(${i})">❔</button>`).join('')}</div>`;window.flipMem=i=>{let b=$('mem'+i);if(lock||b.classList.contains('open')||b.classList.contains('done'))return;b.textContent=icons[i];b.classList.add('open');if(first===null){first=i;return}moves++;if(icons[first]===icons[i]){b.classList.add('done');$('mem'+first).classList.add('done');matches++;first=null;$('memInfo').textContent=`চাল: ${moves} · জোড়া: ${matches}/৮`;if(matches===8){$('memInfo').textContent+= ' 🎉 শেষ! +২৫ পয়েন্ট';award(25)}}else{lock=true;let prev=first;first=null;setTimeout(()=>{b.textContent='❔';b.classList.remove('open');$('mem'+prev).textContent='❔';$('mem'+prev).classList.remove('open');lock=false;$('memInfo').textContent=`চাল: ${moves} · জোড়া: ${matches}/৮`},700)} }}
+function startReaction(){showTab('games');let c=openGame('⚡ রিঅ্যাকশন টেস্ট');c.innerHTML=`<p>শুরুতে চাপ দাও, তারপর সবুজ হলে যত দ্রুত পারো আবার চাপো!</p><button id="reactBtn" class="btn yellow" style="width:100%;min-height:110px" onclick="reactionClick()">শুরু করতে চাপো</button><p id="reactMsg"></p>`;let state='idle',start=0,timer=null;window.reactionClick=()=>{let b=$('reactBtn');if(state==='idle'){state='wait';b.textContent='অপেক্ষা করো…';b.className='btn';b.style.background='#8a435a';timer=setTimeout(()=>{state='go';start=performance.now();b.textContent='এখন চাপো!';b.style.background='#008e68'},1000+Math.random()*2500)}else if(state==='wait'){clearTimeout(timer);state='idle';b.textContent='খুব তাড়াতাড়ি! আবার চেষ্টা করো';$('reactMsg').textContent='সবুজ হওয়ার আগে চাপ দিয়েছ।';}else if(state==='go'){let ms=Math.round(performance.now()-start);state='idle';b.textContent='আবার খেলো';b.style.background='';$('reactMsg').textContent=`⚡ তোমার সময় ${ms} মিলিসেকেন্ড!`;award(Math.max(1,Math.round(1000/ms*5))) }}
+updateStats();
+</script>
+</body></html>
